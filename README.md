@@ -1,97 +1,143 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# BrainBrawler 2.0 Mobile - Android Studio Project
 
-# Getting Started
+🎮 **Sistema P2P Mobile completo per BrainBrawler con WebRTC**
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## 🚀 Setup Rapido per Android Studio
 
-## Step 1: Start Metro
+### 1. Clone del Repository e Setup Dipendenze
+```bash
+git clone https://github.com/Polimar/bb-android.git
+cd bb-android
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
-
-To start the Metro dev server, run the following command from the root of your React Native project:
-
-```sh
-# Using npm
-npm start
-
-# OR using Yarn
-yarn start
+# IMPORTANTE: Installa dipendenze npm prima di aprire Android Studio
+npm install
+# OPPURE se npm non disponibile:
+# Copia node_modules da progetto esistente
 ```
 
-## Step 2: Build and run your app
+### 2. Apri in Android Studio
+1. **Open Project** → Seleziona la cartella `android/` (NON la root!)
+2. **Sync Project with Gradle Files** (automatico)
+3. **Build APK**: Menu → Build → Build Bundle(s)/APK(s) → Build APK(s)
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+### 3. Configurazione Necessaria
+- **Android SDK**: API 24+ (Android 7.0+)
+- **RAM consigliata**: 8GB+ (Gradle configurato per 12GB)
+- **Java**: OpenJDK 17 o superiore
+- **Node.js**: v18+ (per installare dipendenze)
 
-### Android
+## ⚠️ **ERRORI COMUNI**
 
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+### "Included build does not exist" Error
+**Causa**: Mancano le dipendenze npm (node_modules)
+**Fix**: 
+```bash
+cd bb-android
+npm install  # Installa tutte le dipendenze React Native
 ```
 
-### iOS
+### "SDK location not found" Error  
+**Causa**: Android SDK non configurato
+**Fix**: File → Project Structure → SDK Location → Android SDK
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+## ✅ Sistema P2P Implementato
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+### Architettura
+- **WebRTC**: Comunicazione peer-to-peer diretta
+- **Server Election**: Algoritmo automatico per host selection
+- **Emergency Failover**: Promozione automatica in caso di disconnessione
+- **Real-time Sync**: Sincronizzazione game state tra dispositivi
 
-```sh
-bundle install
+### Server Election Algorithm
+```typescript
+Priority Score = Account Type + Battery Level + Connection Quality
+- ADMIN: 1000 punti
+- PREMIUM: 500 punti  
+- FREE: 100 punti
 ```
 
-Then, and every time you update your native dependencies, run:
+### Account di Test
+- **Admin**: admin@brainbrawler.com / BrainBrawler2024!
+- **Server**: https://www.brainbrawler.com
 
-```sh
-bundle exec pod install
+## 📱 Build dell'APK
+
+### Metodo 1: Android Studio GUI
+1. Menu → Build → Build Bundle(s)/APK(s) → Build APK(s)
+2. APK output: `android/app/build/outputs/apk/debug/app-debug.apk`
+
+### Metodo 2: Terminale
+```bash
+cd android
+./gradlew assembleDebug
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
+### Metodo 3: Script Automatizzato
+```bash
+./build-apk.sh
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+## 🔧 Configurazione Gradle Ottimizzata
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+Il progetto è già configurato per performance ottimali:
+```properties
+org.gradle.jvmargs=-Xmx12g -XX:MaxMetaspaceSize=4g -XX:+UseParallelGC
+org.gradle.daemon=true
+org.gradle.parallel=true
+```
 
-## Step 3: Modify your app
+## 🎯 Test del Sistema P2P
 
-Now that you have successfully run the app, let's make changes!
+1. **Installa APK** su dispositivi Android
+2. **Login** con account admin
+3. **Crea Game** e invita altri player
+4. **Test Server Election**: Disconnetti host, verifica promotion automatica
+5. **Test Failover**: Simula disconnessioni per emergency takeover
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## 📂 Struttura Progetto
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+```
+bb-android/
+├── android/           # Progetto Android Studio ← APRI QUESTA CARTELLA
+├── src/              # Codice React Native + P2P
+├── node_modules/     # Dipendenze npm (da installare)
+├── build-apk.sh      # Script build universale
+└── BUILD_GUIDE.md    # Documentazione completa
+```
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+## 🔍 Troubleshooting
 
-## Congratulations! :tada:
+### Build Errors
+- **"Included build does not exist"** → Installa npm dependencies
+- **"SDK location not found"** → Configura ANDROID_HOME in Android Studio
+- **"BuildConfig not found"** → Risolto (import già aggiunto)
+- **"Memory errors"** → Aumenta heap memory in gradle.properties
 
-You've successfully run and modified your React Native App. :partying_face:
+### Runtime Errors
+- **App crash al startup** → Verifica connessione internet
+- **P2P connection failed** → Controlla firewall/NAT
+- **Login failed** → Verifica server https://www.brainbrawler.com
 
-### Now what?
+## ⚡ Performance
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+**Build Times:**
+- Clean build: ~2-3 minuti
+- Incremental: ~10-30 secondi
+- APK size: ~140MB (include WebRTC libraries)
 
-# Troubleshooting
+**Supported Devices:**
+- Android 7.0+ (API Level 24+)
+- RAM: 3GB+ raccomandati
+- Storage: 200MB+ liberi
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+## 🌐 Tecnologie
 
-# Learn More
+- **React Native 0.75.4**
+- **WebRTC** per P2P communication
+- **TypeScript** per type safety
+- **Android SDK 35**
+- **Gradle 8.14.1**
 
-To learn more about React Native, take a look at the following resources:
+## 📝 Licenza
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Sistema sviluppato per BrainBrawler.com - Proprietario
