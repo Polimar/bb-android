@@ -9,10 +9,11 @@
 git clone https://github.com/Polimar/bb-android.git
 cd bb-android
 
-# IMPORTANTE: Installa dipendenze npm prima di aprire Android Studio
+# METODO AUTOMATICO: Script di setup
+./setup-android-studio.sh
+
+# OPPURE manuale:
 npm install
-# OPPURE se npm non disponibile:
-# Copia node_modules da progetto esistente
 ```
 
 ### 2. Apri in Android Studio
